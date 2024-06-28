@@ -18,6 +18,7 @@ class NeighborhoodResource extends Resource
     protected static ?string $model = Neighborhood::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Privada';
 
     public static function form(Form $form): Form
     {
