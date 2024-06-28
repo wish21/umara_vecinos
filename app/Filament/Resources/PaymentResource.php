@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PaymentResource\Pages;
 use App\Filament\Resources\PaymentResource\RelationManagers;
 use App\Models\Payment;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,12 +14,18 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $modelLabel = 'Pagos';
 
     public static function form(Form $form): Form
     {
@@ -50,7 +57,19 @@ class PaymentResource extends Resource
 
     public static function table(Table $table): Table
     {
+
         return $table
+
+        ->modifyQueryUsing(function (Builder $query) {
+            if (auth()->user()->roles[0]['name']=== 'Vecino') {
+                $houses = DB::table('houses')->where('user_id',auth()->user()->id)->get('id');
+                return $query->where('house_id', $houses[0]->id);
+            }
+            if (auth()->user()->roles[0]['name'] === 'Administrador') {
+                return $query;
+            }
+        })
+
             ->columns([
                 Tables\Columns\TextColumn::make('house.number')
                 ->label('House')

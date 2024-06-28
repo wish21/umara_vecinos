@@ -17,8 +17,8 @@ class HouseResource extends Resource
 {
     protected static ?string $model = House::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
+    protected static ?string $modelLabel = 'Casa';
     public static function form(Form $form): Form
     {
         return $form
