@@ -19,6 +19,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use Filament\Widgets\Widget;
+use App\Filament\Widgets\HousesCount;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -29,6 +30,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration()
+            ->profile()
             ->brandName('Vecinos Umara Sector 1')
             ->brandLogo(asset('img/logo.png'))
             ->favicon(asset('img/favicon.png'))
@@ -43,9 +46,10 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                //HousesCount::class,
+                //Widgets\FilamentInfoWidget::class,
             ])
-            ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            //->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

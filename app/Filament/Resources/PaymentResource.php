@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-
+use Filament\Pages\Actions;
 class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
@@ -85,6 +85,10 @@ class PaymentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('generateReceipt')
+                ->label('Recibo')
+                ->url(fn (Payment $record): string => route('pdf.receipt', $record))
+                ->icon('heroicon-o-arrow-down-tray')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
