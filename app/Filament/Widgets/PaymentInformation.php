@@ -64,6 +64,13 @@ class PaymentInformation extends BaseWidget
                 ->description('Año: '.date('Y'))
                 ->descriptionIcon('heroicon-o-home')
                 ->color('success'),
+                Stat::make('Processed', '192.1k')
+            ->color('success')
+            ->extraAttributes([
+                'class' => 'cursor-pointer',
+                'wire:click' => "\$dispatch('setStatusFilter', { filter: 'processed' })",
+            ]),
+
             ];
          }
 

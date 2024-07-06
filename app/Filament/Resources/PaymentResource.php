@@ -20,6 +20,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Filament\Pages\Actions;
+use Illuminate\Support\Str;
+use Illuminate\Support\HtmlString;
+
 class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
@@ -36,8 +39,7 @@ class PaymentResource extends Resource
                     ->relationship('house', 'number')
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->street} {$record->number}")
                     ->required(),
-                Forms\Components\DatePicker::make('pay_date')
-                    ->required(),
+                Forms\Components\DatePicker::make('pay_date'),
                 Forms\Components\TextInput::make('concept')
                     ->required()
                     ->default('Mensualidad del mes: '. $meses[date('n') - 1].' - '.date('Y'))
@@ -52,12 +54,17 @@ class PaymentResource extends Resource
                         'extraordinaria' => 'Extraordinaria',
                     ])
                     ->required(),
+                    Forms\Components\Select::make('status')
+                    ->options([
+                        '1' => 'Pagado',
+                        '0' => 'Adeudo',
+                    ])
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
-
         return $table
 
         ->modifyQueryUsing(function (Builder $query) {
@@ -76,9 +83,21 @@ class PaymentResource extends Resource
                 ->formatStateUsing(function ($state, Model $order) {
                     return $order->house->street . ' ' . $order->house->number;
                 }),
-                Tables\Columns\TextColumn::make('pay_date')->date(),
+                /*Tables\Columns\TextColumn::make('pay_date')
+                ->placeholder('Adeudo'),
+                */
+                Tables\Columns\TextColumn::make('concept'),
                 Tables\Columns\TextColumn::make('amount')->money('MXN'),
                 Tables\Columns\TextColumn::make('type'),
+                Tables\Columns\IconColumn::make('status')
+                ->icon(fn (string $state): string => match ($state) {
+                    '1' => 'heroicon-o-banknotes',
+                    '0' => 'heroicon-o-banknotes'
+                })
+                ->color(fn (string $state): string => match ($state) {
+                    '1' => 'success',
+                    '0' => 'danger'
+                })
             ])
             ->filters([
                 //
@@ -89,6 +108,11 @@ class PaymentResource extends Resource
                 ->label('Recibo')
                 ->url(fn (Payment $record): string => route('pdf.receipt', $record))
                 ->icon('heroicon-o-arrow-down-tray')
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['user_id'] = auth()->id();
+
+                    return $data;
+                })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

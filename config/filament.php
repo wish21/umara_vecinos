@@ -86,4 +86,7 @@ return [
 
     'livewire_loading_delay' => 'default',
 
+    'path' => env('FILAMENT_PATH', 'admin'),
+    'domain' => env('FILAMENT_DOMAIN', null),
+
 ];

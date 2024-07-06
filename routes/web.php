@@ -3,9 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PdfController;
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
+*/
+Route::redirect('/', '/admin');
 
 
 Route::get('/pdf/receipt/{id}', [PdfController::class, 'generateReceipt'])->name('pdf.receipt');

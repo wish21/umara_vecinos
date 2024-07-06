@@ -21,6 +21,8 @@ use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugi
 use Filament\Widgets\Widget;
 use App\Filament\Widgets\HousesCount;
 use App\Filament\Resources\PaymentResource\Widgets\MorososWidget;
+use App\Filament\Resources\PaymentResource\Widgets\PaymentsTableWidget;
+use App\Filament\Resources\PaymentResource\Widgets\DebtorsTableWidget;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -46,12 +48,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                MorososWidget::class,
-                //HousesCount::class,
+                //DebtorsTableWidget::class,
+                //PaymentsTableWidget::class,
+                //MorososWidget::class,
                 //Widgets\FilamentInfoWidget::class,
             ])
-            //->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            //->plugin(FilamentSpatieRolesPermmissionsPlugin::make())
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

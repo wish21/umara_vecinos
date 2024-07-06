@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('pay_date');
             $table->decimal('amount', 8, 2);
             $table->string('type');
+            $table->boolean('status')->default(0);
             $table->timestamps();
             $table->foreign('house_id')->references('id')->on('houses')->onDelete('cascade');
         });
